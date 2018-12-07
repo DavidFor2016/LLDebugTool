@@ -152,7 +152,7 @@ static NSString *const kDatabaseVersion = @"1";
         }
         FMResultSet *set = [db executeQuery:SQL values:values error:&error];
         while ([set next]) {
-            NSData *data = [set objectForColumn:kObjectDataColumn];
+            NSData *data = [set dataForColumn:kObjectDataColumn];
             id model = [NSKeyedUnarchiver unarchiveObjectWithData:data];
             if (model) {
                 [modelArray insertObject:model atIndex:0];
