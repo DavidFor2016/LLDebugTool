@@ -26,7 +26,7 @@
 
 static NSString *const kCellID = @"cellID";
 
-@interface ViewController () <UITableViewDelegate , UITableViewDataSource>
+@interface ViewController () <UITableViewDelegate, UITableViewDataSource>
 
 @property (weak, nonatomic) IBOutlet UIImageView *imgView;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -51,7 +51,7 @@ static NSString *const kCellID = @"cellID";
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"openCrash"];
         [[NSUserDefaults standardUserDefaults] synchronize];
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [[LLDebugTool sharedTool] showDebugViewControllerWithIndex:2];
+            [[LLDebugTool sharedTool] executeAction:LLDebugToolActionCrash];
         });
 
     }
@@ -70,7 +70,7 @@ static NSString *const kCellID = @"cellID";
     
     
     // Json Response
-    [[NetTool sharedTool].afHTTPSessionManager GET:@"http://baike.baidu.com/api/openapi/BaikeLemmaCardApi?&format=json&appid=379020&bk_key=%E7%81%AB%E5%BD%B1%E5%BF%8D%E8%80%85&bk_length=600" parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    [[NetTool shared].afHTTPSessionManager GET:@"http://baike.baidu.com/api/openapi/BaikeLemmaCardApi?&format=json&appid=379020&bk_key=%E7%81%AB%E5%BD%B1%E5%BF%8D%E8%80%85&bk_length=600" parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         
@@ -79,7 +79,7 @@ static NSString *const kCellID = @"cellID";
     //NSURLSession
     NSMutableURLRequest *htmlRequest = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:@"https://cocoapods.org/pods/LLDebugTool"]];
     [htmlRequest setHTTPMethod:@"GET"];
-    NSURLSessionDataTask *dataTask = [[NetTool sharedTool].session dataTaskWithRequest:htmlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+    NSURLSessionDataTask *dataTask = [[NetTool shared].session dataTaskWithRequest:htmlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         // Not important. Just check to see if the current Demo version is consistent with the latest version.
         // 只是检查一下当前Demo版本和最新版本是否一致，不一致就提示一下新版本。
         NSString *htmlString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
@@ -115,11 +115,11 @@ static NSString *const kCellID = @"cellID";
 
 #pragma mark - Actions
 - (void)testAppInfo {
-    [[LLDebugTool sharedTool] showDebugViewControllerWithIndex:3];
+    [[LLDebugTool sharedTool] executeAction:LLDebugToolActionAppInfo];
 }
 
 - (void)testSandbox {
-    [[LLDebugTool sharedTool] showDebugViewControllerWithIndex:4];
+    [[LLDebugTool sharedTool] executeAction:LLDebugToolActionSandbox];
 }
 
 #pragma mark - UITableView
@@ -183,7 +183,7 @@ static NSString *const kCellID = @"cellID";
         if (indexPath.row == 0) {
             cell.textLabel.text = NSLocalizedString(@"test.color.style", nil);
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            switch ([LLConfig sharedConfig].colorStyle) {
+            switch ([LLConfig shared].colorStyle) {
                 case LLConfigColorStyleHack:{
                     cell.detailTextLabel.text = @"LLConfigColorStyleHack";
                 }
@@ -206,16 +206,16 @@ static NSString *const kCellID = @"cellID";
         } else if (indexPath.row == 1) {
             cell.textLabel.text = NSLocalizedString(@"test.window.style", nil);
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            switch ([LLConfig sharedConfig].windowStyle) {
-                case LLConfigWindowSuspensionBall:{
+            switch ([LLConfig shared].entryWindowStyle) {
+                case LLConfigEntryWindowStyleSuspensionBall:{
                     cell.detailTextLabel.text = @"LLConfigWindowSuspensionBall";
                 }
                     break;
-                case LLConfigWindowPowerBar:{
+                case LLConfigEntryWindowStylePowerBar:{
                     cell.detailTextLabel.text = @"LLConfigWindowPowerBar";
                 }
                     break;
-                case LLConfigWindowNetBar:{
+                case LLConfigEntryWindowStyleNetBar:{
                     cell.detailTextLabel.text = @"LLConfigWindowNetBar";
                 }
                     break;
